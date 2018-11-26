@@ -63,17 +63,6 @@ const Element = () => {
                 storeElement(tagId, element); 
             }
 
-            // Set element children if 3rd parameter exist
-            const setChildren = (parent,childrenArr) => { parent.append( get(...childrenArr) ) }
-
-            // Loop trough again on the elementArray, but in this case we only looking for the third index from the array
-            for(let i = 0; i < elementArr.length; i++){
-                if(elementArr[i][2] !== undefined){
-                    const [ ,parent,childrenArr] = elementArr[i];
-                    setChildren(parent, childrenArr);
-                }
-            }
-
         },
 
         remove: tagIds => {
