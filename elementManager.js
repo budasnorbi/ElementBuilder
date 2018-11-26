@@ -1,4 +1,4 @@
-const Element = () => {
+const ElementManager = () => {
     const _elementStorage = new Map();
 
     const remove = tagIds => {
@@ -47,26 +47,60 @@ const Element = () => {
                 storage = _elementStorage, 
                 parser = new DOMParser();
 
+            var returnStuff = [];
+            
+
             // Store element, if the tagId already exist it will throw an error!
             const storeElement = (tagId, generatedElement) => {
-                storage.has(tagId) === false ?  storage.set(tagId, generatedElement) :  () => {throw `[${tagId}] is exist in storage!`}; 
+                storage.has(tagId) === false ? storage.set(tagId, generatedElement) : () => {throw `[${tagId}] is exist in storage!`}; 
             }
 
             // Generate htmlNode from string
             const generateNode = htmlString => parser.parseFromString( htmlString, 'text/html').body.firstChild.cloneNode(true);
 
-            elementArr = elementArr.map( item => [ item[0], generateNode(item[1]), item[2] ]);
-            console.log(elementArr);
-            // Loop trough on the elementArray and generate the elements
-            for(let i = 0; i < elementArr.length; i++){
-                const [tagId, element] = elementArr[i];
-                storeElement(tagId, element); 
-            }
+            const setItRoot = node => { document.body.appendChild(node) };
 
+            elementArr
+                .map( ([tagId, htmlString, options]) => {
+                    return options ? [tagId, generateNode(htmlString), options] : [tagId, generateNode(htmlString)];
+                })
+                .forEach( el => {
+                    const [tagId, node, options] = el;
+                    if(el.length === 3){                   
+                        options.isRoot && setItRoot(node);
+
+                        if(options.returnId && !options.returnNode){
+                            returnStuff.push(tagId);
+                        }
+
+                        if(options.returnNode && !options.returnId){
+                            returnStuff.push(node);
+                        }
+
+                        if(options.returnId && options.returnNode){
+                            
+                            returnStuff.push({
+                                [tagId]: node
+                            });
+                        }
+                    } else {
+                        returnStuff.push({
+                            [tagId]: node
+                        });
+                    }
+
+                    storeElement(tagId, node); 
+                });
+            
+            return returnStuff;
         },
 
         remove: tagIds => {
             remove(tagIds);
+        },
+
+        search: test => {
+
         },
 
         append: elementTree => {
