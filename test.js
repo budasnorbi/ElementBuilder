@@ -1,22 +1,16 @@
 const Element = ElementManager();
 
 const test0 = Element.create(
-    ['teszt','<div></div>',{returnId:true}],
+    ['div0','<div>0</div>',{returnId:true}],
 );
-
-console.log(test0);
-
 
 const test1 = Element.create(
-    ['div','<div></div>',{isRoot:true, returnNode: true}],
+    ['div1','<div>1</div>',{isRoot:true, returnNode: true}],
 );
-
-console.log(test1);
 
 
 const test2 = Element.create(
-    ['div','<div></div>',{isRoot:true, returnId:true, returnNode: true}],
+    ['div2','<div>2</div>',{isRoot:true, returnId:true, returnNode: true}],
 );
 
-
-console.log(test2);
+console.log(Element.search('div'));

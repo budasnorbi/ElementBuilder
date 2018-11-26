@@ -69,24 +69,11 @@ const ElementManager = () => {
                     if(el.length === 3){                   
                         options.isRoot && setItRoot(node);
 
-                        if(options.returnId && !options.returnNode){
-                            returnStuff.push(tagId);
-                        }
-
-                        if(options.returnNode && !options.returnId){
-                            returnStuff.push(node);
-                        }
-
-                        if(options.returnId && options.returnNode){
-                            
-                            returnStuff.push({
-                                [tagId]: node
-                            });
-                        }
+                        options.returnId && !options.returnNode && returnStuff.push(tagId);
+                        options.returnNode && !options.returnId && returnStuff.push(node);
+                        options.returnId && options.returnNode && returnStuff.push({[tagId]: node}); 
                     } else {
-                        returnStuff.push({
-                            [tagId]: node
-                        });
+                        returnStuff.push({[tagId]: node});
                     }
 
                     storeElement(tagId, node); 
@@ -99,8 +86,11 @@ const ElementManager = () => {
             remove(tagIds);
         },
 
-        search: test => {
+        search: string => {
+            const names = [];
+            for(var itemName of _elementStorage.keys()){ names.push(itemName) }
 
+            return get(names.filter( name => name.includes(string)));
         },
 
         append: elementTree => {
