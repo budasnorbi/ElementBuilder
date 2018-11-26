@@ -1,2 +1,2 @@
 # ElementBuilder
-Managing elements without html
+Creating, managing elements with javascript
