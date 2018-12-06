@@ -42,22 +42,18 @@ const ElementManager = () => {
         },
 
         create: (...elementArr) => {
-
             const 
                 storage = _elementStorage, 
                 parser = new DOMParser();
 
             var returnStuff = [];
-            
-
+        
             // Store element, if the tagId already exist it will throw an error!
             const storeElement = (tagId, generatedElement) => {
                 storage.has(tagId) === false ? storage.set(tagId, generatedElement) : () => {throw `[${tagId}] is exist in storage!`}; 
             }
-
             // Generate htmlNode from string
             const generateNode = htmlString => parser.parseFromString( htmlString, 'text/html').body.firstChild.cloneNode(true);
-
             const setItRoot = node => { document.body.appendChild(node) };
 
             elementArr
@@ -69,11 +65,26 @@ const ElementManager = () => {
                     if(el.length === 3){                   
                         options.isRoot && setItRoot(node);
 
-                        options.returnId && !options.returnNode && returnStuff.push(tagId);
-                        options.returnNode && !options.returnId && returnStuff.push(node);
-                        options.returnId && options.returnNode && returnStuff.push({[tagId]: node}); 
+                        if(elementArr.length === 1){
+                            returnStuff = undefined;
+                            if(options.returnId && !options.returnNode) returnStuff = tagId
+                            if(options.returnNode && !options.returnId) returnStuff = node
+                            
+                            if(options.returnId && options.returnNode){
+                                returnStuff = {[tagId]: node};
+                            }
+                        } else {
+                            options.returnId && !options.returnNode && returnStuff.push(tagId);
+                            options.returnNode && !options.returnId && returnStuff.push(node);
+                            options.returnId && options.returnNode && returnStuff.push({[tagId]: node}); 
+                        }
                     } else {
-                        returnStuff.push({[tagId]: node});
+                        if(elementArr.length === 1){
+                            returnStuff = undefined;
+                        } else {
+                            returnStuff.push(undefined);
+                        }
+                        
                     }
 
                     storeElement(tagId, node); 
